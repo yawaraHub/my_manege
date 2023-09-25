@@ -38,6 +38,12 @@ class _ScheduleState extends State<Schedule> {
       'endTime': 740.0,
       'categoryName': 'English'
     },
+    {
+      'thisColor': '993399',
+      'startTime': 800.0,
+      'endTime': 900.0,
+      'categoryName': 'English'
+    },
   ];
 
   List<Map<String, dynamic>> displayType = [
