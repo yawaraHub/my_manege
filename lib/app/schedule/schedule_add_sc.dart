@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:my_manege/app/parts/category_select/category_select_sc.dart';
 
 class ScheduleDidAdd extends StatefulWidget {
   const ScheduleDidAdd({Key? key}) : super(key: key);
@@ -57,11 +56,11 @@ class _ScheduleDidAddState extends State<ScheduleDidAdd> {
                       children: [
                         TextButton(
                             onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CategorySelect();
-                                  });
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       return CategorySelect();
+                              //     });
                             },
                             child: Text('カテゴリーを選択')),
                         Row(
@@ -109,11 +108,11 @@ class _ScheduleDidAddState extends State<ScheduleDidAdd> {
                       children: [
                         TextButton(
                             onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CategorySelect();
-                                  });
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       return CategorySelect();
+                              //     });
                             },
                             child: Text('カテゴリーを選択')),
                         Row(

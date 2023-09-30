@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_manege/app/Edit/edit_sc.dart';
+import 'package:my_manege/app/category/sc_category.dart';
 import 'package:my_manege/app/report/report_sc.dart';
 import 'package:my_manege/app/schedule/sc_schedule/sc_schedule.dart';
 import 'package:my_manege/app/setting/setting_sc.dart';

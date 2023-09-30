@@ -15,7 +15,7 @@ class _ScheduleState extends State<Schedule> {
     {
       'thisColor': '006666',
       'startTime': 60.0,
-      'endTime': 180.0,
+      'endTime': 200.0,
       'categoryName': 'Math'
     },
     {
@@ -25,7 +25,7 @@ class _ScheduleState extends State<Schedule> {
       'categoryName': 'English'
     },
   ];
-  List<Map<String, dynamic>> dones = [
+  List<Map<String, dynamic>> logs = [
     {
       'thisColor': '002222',
       'startTime': 500.0,
@@ -68,7 +68,6 @@ class _ScheduleState extends State<Schedule> {
       });
     }
   }
-
 
   //TODO:スケジュールかやったことか両方を表示するのかを判定しそれを円かタイムテーブルで表示するのかを判定し、そのWidgetを生成する
 
