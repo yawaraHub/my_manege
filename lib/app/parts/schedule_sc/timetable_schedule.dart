@@ -21,10 +21,10 @@ class TimetableSchedule {
                     size: Size(width, height),
                     painter: RoundedRectPainter(
                       scheduleData: schedules[i],
-                      thisColor: schedules[i]['category']['color'],
-                      startTime: schedules[i]['startTime'],
-                      endTime: schedules[i]['endTime'],
-                      categoryName: schedules[i]['category']['name'],
+                      thisColor: schedules[i]['category_data']['color'],
+                      startTime: schedules[i]['start_at'],
+                      endTime: schedules[i]['end_at'],
+                      categoryName: schedules[i]['category_data']['name'],
                     ),
                   ),
                 }
@@ -105,10 +105,8 @@ class RoundedRectPainter extends CustomPainter {
     List<String> timeEndParts = endTime.split(":");
     final int startHour = int.parse(timeStartParts[0]);
     final int startMinute = int.parse(timeStartParts[1]);
-    final int startSecond = int.parse(timeStartParts[2]);
     final int endHour = int.parse(timeEndParts[0]);
     final int endMinute = int.parse(timeEndParts[1]);
-    final int endSecond = int.parse(timeEndParts[2]);
 
     // RRect（丸みを帯びた矩形）を作成
     final RRect roundedRect = RRect.fromRectAndRadius(

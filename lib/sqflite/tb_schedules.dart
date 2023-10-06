@@ -59,7 +59,7 @@ class SchedulesDao {
       String dateToSearch) async {
     final db = await dbHelper.database;
     await _createTableIfNotExists(db);
-    return await db.rawQuery(
-        "SELECT * FROM schedules WHERE start_at LIKE '$dateToSearch%'");
+    return await db
+        .rawQuery("SELECT * FROM schedules WHERE day LIKE '$dateToSearch%'");
   }
 }

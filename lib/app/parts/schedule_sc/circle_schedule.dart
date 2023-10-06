@@ -25,13 +25,14 @@ class CircleSchedule {
                     size: Size(width - 85, width - 85),
                     painter: FunShape(
                       scheduleData: schedules[i],
-                      thisColor: schedules[i]['category']['color'],
+                      thisColor: schedules[i]['category_data']['color'],
                       // 色を指定
-                      startTime: schedules[i]['startTime'],
+                      startTime: schedules[i]['start_at'],
                       // 開始時間
-                      endTime: schedules[i]['endTime'],
+                      endTime: schedules[i]['end_at'],
                       // 終了時間
-                      categoryName: schedules[i]['category']['name'], //カテゴリー名
+                      categoryName: schedules[i]['category_data']
+                          ['name'], //カテゴリー名
                     ),
                   ),
                 }
@@ -148,10 +149,8 @@ class FunShape extends CustomPainter {
     List<String> timeEndParts = endTime.split(":");
     final int startHour = int.parse(timeStartParts[0]);
     final int startMinute = int.parse(timeStartParts[1]);
-    final int startSecond = int.parse(timeStartParts[2]);
     final int endHour = int.parse(timeEndParts[0]);
     final int endMinute = int.parse(timeEndParts[1]);
-    final int endSecond = int.parse(timeEndParts[2]);
     final double startAngle =
         pi / 12 / 60 * (startHour * 60 + startMinute) - pi / 2; // 開始角度
     final double sweepAngle = pi /

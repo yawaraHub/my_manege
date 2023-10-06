@@ -15,36 +15,8 @@ class Schedule extends StatefulWidget {
 }
 
 class _ScheduleState extends State<Schedule> {
-  // List<Map<String, dynamic>> schedules = [
-  //   {
-  //     'thisColor': '006666',
-  //     'startTime': '08:40:00',
-  //     'endTime': '10:50:00',
-  //     'categoryName': 'Math'
-  //   },
-  //   {
-  //     'thisColor': '660066',
-  //     'startTime': '12:10:00',
-  //     'endTime': '13:11:00',
-  //     'categoryName': 'English'
-  //   },
-  // ];
-  // List<Map<String, dynamic>> logs = [
-  //   {
-  //     'thisColor': '006666',
-  //     'startTime': '08:40:00',
-  //     'endTime': '09:40:00',
-  //     'categoryName': 'Math'
-  //   },
-  //   {
-  //     'thisColor': '660066',
-  //     'startTime': '10:10:00',
-  //     'endTime': '11:11:00',
-  //     'categoryName': 'English'
-  //   },
-  // ];
-  List<Map<String, dynamic>> schedules = [];
-  List<Map<String, dynamic>> logs = [];
+  late List<Map<String, dynamic>> schedules = [];
+  late List<Map<String, dynamic>> logs = [];
   List<Map<String, dynamic>> displayType = [
     {'bool': true, 'name': '予定'},
     {'bool': false, 'name': '行動記録'},
@@ -64,9 +36,10 @@ class _ScheduleState extends State<Schedule> {
 
   _getLogs() async {
     List<Map<String, dynamic>> originalLogs = await LogsDao().getSameDayData(
-        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+        "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}");
 
     for (int i = 0; i < originalLogs.length; i++) {
+      logs.add({});
       logs[i]['id'] = originalLogs[i]['id'];
       logs[i]['day'] = originalLogs[i]['day'];
       logs[i]['start_at'] = originalLogs[i]['start_at'];
@@ -87,12 +60,15 @@ class _ScheduleState extends State<Schedule> {
         Map<String,
             dynamic>> originalSchedules = await SchedulesDao().getOneDaySchedule(
         "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+    List<Map<String, dynamic>> originalAllSchedules =
+        await SchedulesDao().queryAllRows();
     for (int i = 0; i < originalSchedules.length; i++) {
+      schedules.add({});
       schedules[i]['id'] = originalSchedules[i]['id'];
       schedules[i]['day'] = originalSchedules[i]['day'];
       schedules[i]['start_at'] = originalSchedules[i]['start_at'];
       schedules[i]['end_at'] = originalSchedules[i]['end_at'];
-      schedules[i]['review'] = originalSchedules[i]['description'];
+      schedules[i]['description'] = originalSchedules[i]['description'];
       schedules[i]['category_id'] = originalSchedules[i]['category_id'];
       schedules[i]['created_at'] = originalSchedules[i]['created_at'];
       schedules[i]['updated_at'] = originalSchedules[i]['updated_at'];

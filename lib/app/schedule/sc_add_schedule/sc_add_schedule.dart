@@ -3,6 +3,8 @@ import 'package:my_manege/sqflite/tb_category.dart';
 import 'package:my_manege/sqflite/tb_logs.dart';
 import 'package:my_manege/sqflite/tb_schedules.dart';
 
+import '../../../main.dart';
+
 class AddSchedule extends StatefulWidget {
   final int categoryId;
   const AddSchedule({super.key, required this.categoryId});
@@ -28,10 +30,10 @@ class _AddScheduleState extends State<AddSchedule> {
     setState(() {});
   }
 
-  Future<void> _selectTime(BuildContext context, selectedTime) async {
+  Future<void> _selectStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: selectedTime, // 最初に表示する時刻を設定
+      initialTime: selectedStartTime, // 最初に表示する時刻を設定
       builder: (BuildContext context, Widget? child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
@@ -42,11 +44,26 @@ class _AddScheduleState extends State<AddSchedule> {
 
     if (picked != null) {
       setState(() {
-        if (selectedTime == selectedStartTime) {
-          selectedStartTime = picked;
-        } else if (selectedTime == selectedEndTime) {
-          selectedEndTime = picked;
-        }
+        selectedStartTime = picked;
+      });
+    }
+  }
+
+  Future<void> _selectEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedEndTime, // 最初に表示する時刻を設定
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedEndTime = picked;
       });
     }
   }
@@ -130,13 +147,12 @@ class _AddScheduleState extends State<AddSchedule> {
               selectedColor: Colors.black,
               selectedBorderColor: Colors.blue,
             ),
-            //TODO:開始と終了時間の設定
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
                   onPressed: () {
-                    _selectTime(context, selectedStartTime);
+                    _selectStartTime(context);
                   },
                   child: Text(
                       '${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}'),
@@ -144,7 +160,7 @@ class _AddScheduleState extends State<AddSchedule> {
                 Text('~'),
                 TextButton(
                   onPressed: () {
-                    _selectTime(context, selectedEndTime);
+                    _selectEndTime(context);
                   },
                   child: Text(
                       '${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}'),
@@ -184,9 +200,12 @@ class _AddScheduleState extends State<AddSchedule> {
             if (isSelected[0]) {
               //Record schedule here
               SchedulesDao().insert({
-                'day': selectedDate.toString(),
-                'start_at': selectedStartTime,
-                'end_at': selectedEndTime,
+                'day':
+                    "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
+                'start_at':
+                    "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
+                'end_at':
+                    "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
                 'description': description,
                 'category_id': widget.categoryId,
                 'created_at': DateTime.now().toString(),
@@ -195,15 +214,24 @@ class _AddScheduleState extends State<AddSchedule> {
             } else {
               //Record behavior here
               LogsDao().insert({
-                'day': selectedDate.toString(),
-                'start_at': selectedStartTime,
-                'end_at': selectedEndTime,
+                'day':
+                    "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
+                'start_at':
+                    "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
+                'end_at':
+                    "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
                 'description': description,
                 'category_id': widget.categoryId,
                 'created_at': DateTime.now().toString(),
                 'updated_at': DateTime.now().toString(),
               });
             }
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return HomePage(selectedIndex: 0);
+              }),
+            );
           },
           child: Text('登録'),
         ),
