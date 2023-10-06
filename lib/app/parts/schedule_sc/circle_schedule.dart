@@ -25,13 +25,13 @@ class CircleSchedule {
                     size: Size(width - 85, width - 85),
                     painter: FunShape(
                       scheduleData: schedules[i],
-                      thisColor: schedules[i]['thisColor'],
+                      thisColor: schedules[i]['category']['color'],
                       // 色を指定
                       startTime: schedules[i]['startTime'],
                       // 開始時間
                       endTime: schedules[i]['endTime'],
                       // 終了時間
-                      categoryName: schedules[i]['categoryName'], //カテゴリー名
+                      categoryName: schedules[i]['category']['name'], //カテゴリー名
                     ),
                   ),
                 }

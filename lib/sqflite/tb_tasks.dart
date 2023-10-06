@@ -5,8 +5,10 @@ class TasksDao {
   final dbHelper = MyManageDBHelper.instance;
 
   Future<void> _createTableIfNotExists(Database db) async {
-    final tableExists = await db.rawQuery("SELECT 1 FROM tasks LIMIT 1");
-    if (tableExists.isEmpty) {
+    final List<Map<String, dynamic>> tableInfo = await db.rawQuery(
+      'PRAGMA table_info(tasks)',
+    );
+    if (tableInfo.isEmpty) {
       await db.execute('''
       CREATE TABLE tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

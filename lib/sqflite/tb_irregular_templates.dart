@@ -5,9 +5,10 @@ class IrregularTemplatesDao {
   final dbHelper = MyManageDBHelper.instance;
 
   Future<void> _createTableIfNotExists(Database db) async {
-    final tableExists =
-        await db.rawQuery("SELECT 1 FROM irregular_templates LIMIT 1");
-    if (tableExists.isEmpty) {
+    final List<Map<String, dynamic>> tableInfo = await db.rawQuery(
+      'PRAGMA table_info(irregular_templates)',
+    );
+    if (tableInfo.isEmpty) {
       await db.execute('''
       CREATE TABLE irregular_templates (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

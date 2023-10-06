@@ -5,9 +5,10 @@ class IrregularSchedulesDao {
   final dbHelper = MyManageDBHelper.instance;
 
   Future<void> _createTableIfNotExists(Database db) async {
-    final tableExists =
-        await db.rawQuery("SELECT 1 FROM irregular_schedules LIMIT 1");
-    if (tableExists.isEmpty) {
+    final List<Map<String, dynamic>> tableInfo = await db.rawQuery(
+      'PRAGMA table_info(irregular_schedules)',
+    );
+    if (tableInfo.isEmpty) {
       await db.execute('''
       CREATE TABLE irregular_schedules (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

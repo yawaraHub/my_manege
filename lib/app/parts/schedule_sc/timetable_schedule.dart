@@ -21,10 +21,10 @@ class TimetableSchedule {
                     size: Size(width, height),
                     painter: RoundedRectPainter(
                       scheduleData: schedules[i],
-                      thisColor: schedules[i]['thisColor'],
+                      thisColor: schedules[i]['category']['color'],
                       startTime: schedules[i]['startTime'],
                       endTime: schedules[i]['endTime'],
-                      categoryName: schedules[i]['categoryName'],
+                      categoryName: schedules[i]['category']['name'],
                     ),
                   ),
                 }

@@ -3,6 +3,7 @@ import 'package:my_manege/app/parts/schedule_sc/circle_schedule.dart';
 import 'package:my_manege/app/parts/schedule_sc/timetable_schedule.dart';
 import 'package:my_manege/app/schedule/goal_add_sc.dart';
 import 'package:my_manege/app/schedule/sc_add_schedule/sc_select_category.dart';
+import 'package:my_manege/sqflite/tb_category.dart';
 import 'package:my_manege/sqflite/tb_logs.dart';
 import 'package:my_manege/sqflite/tb_schedules.dart';
 
@@ -75,6 +76,8 @@ class _ScheduleState extends State<Schedule> {
       logs[i]['created_at'] = originalLogs[i]['created_at'];
       logs[i]['updated_at'] = originalLogs[i]['updated_at'];
       logs[i]['deleted_at'] = originalLogs[i]['deleted_at'];
+      logs[i]['category_data'] =
+          await CategoriesDao().categoryData(originalLogs[i]['category_id']);
     }
     setState(() {});
   }
@@ -85,15 +88,17 @@ class _ScheduleState extends State<Schedule> {
             dynamic>> originalSchedules = await SchedulesDao().getOneDaySchedule(
         "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
     for (int i = 0; i < originalSchedules.length; i++) {
-      logs[i]['id'] = originalSchedules[i]['id'];
-      logs[i]['day'] = originalSchedules[i]['day'];
-      logs[i]['start_at'] = originalSchedules[i]['start_at'];
-      logs[i]['end_at'] = originalSchedules[i]['end_at'];
-      logs[i]['review'] = originalSchedules[i]['description'];
-      logs[i]['category_id'] = originalSchedules[i]['category_id'];
-      logs[i]['created_at'] = originalSchedules[i]['created_at'];
-      logs[i]['updated_at'] = originalSchedules[i]['updated_at'];
-      logs[i]['deleted_at'] = originalSchedules[i]['deleted_at'];
+      schedules[i]['id'] = originalSchedules[i]['id'];
+      schedules[i]['day'] = originalSchedules[i]['day'];
+      schedules[i]['start_at'] = originalSchedules[i]['start_at'];
+      schedules[i]['end_at'] = originalSchedules[i]['end_at'];
+      schedules[i]['review'] = originalSchedules[i]['description'];
+      schedules[i]['category_id'] = originalSchedules[i]['category_id'];
+      schedules[i]['created_at'] = originalSchedules[i]['created_at'];
+      schedules[i]['updated_at'] = originalSchedules[i]['updated_at'];
+      schedules[i]['deleted_at'] = originalSchedules[i]['deleted_at'];
+      schedules[i]['category_data'] = await CategoriesDao()
+          .categoryData(originalSchedules[i]['category_id']);
     }
     setState(() {});
   }
