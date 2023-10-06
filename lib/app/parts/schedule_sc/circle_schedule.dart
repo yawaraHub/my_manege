@@ -9,33 +9,44 @@ class CircleSchedule {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              alignment: Alignment.center,
+            SizedBox(height: width * 0.1),
+            Row(
               children: [
-                CustomPaint(
-                  size: Size(width - 50, width - 50),
-                  painter: ClockPainter(),
+                SizedBox(
+                  width: width * 0.1,
                 ),
-                CustomPaint(
-                  size: Size(width - 80, width - 80),
-                  painter: WhiteCircle(),
-                ),
-                for (int i = 0; i < schedules.length; i++) ...{
-                  CustomPaint(
-                    size: Size(width - 85, width - 85),
-                    painter: FunShape(
-                      scheduleData: schedules[i],
-                      thisColor: schedules[i]['category_data']['color'],
-                      // 色を指定
-                      startTime: schedules[i]['start_at'],
-                      // 開始時間
-                      endTime: schedules[i]['end_at'],
-                      // 終了時間
-                      categoryName: schedules[i]['category_data']
-                          ['name'], //カテゴリー名
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomPaint(
+                      size: Size(width - 50, width - 50),
+                      painter: ClockPainter(),
                     ),
-                  ),
-                }
+                    CustomPaint(
+                      size: Size(width - 80, width - 80),
+                      painter: WhiteCircle(),
+                    ),
+                    for (int i = 0; i < schedules.length; i++) ...{
+                      CustomPaint(
+                        size: Size(width - 85, width - 85),
+                        painter: FunShape(
+                          scheduleData: schedules[i],
+                          thisColor: schedules[i]['category_data']['color'],
+                          // 色を指定
+                          startTime: schedules[i]['start_at'],
+                          // 開始時間
+                          endTime: schedules[i]['end_at'],
+                          // 終了時間
+                          categoryName: schedules[i]['category_data']
+                              ['name'], //カテゴリー名
+                        ),
+                      ),
+                    }
+                  ],
+                ),
+                SizedBox(
+                  width: width * 0.1,
+                ),
               ],
             ),
             SizedBox(height: width * 0.1)

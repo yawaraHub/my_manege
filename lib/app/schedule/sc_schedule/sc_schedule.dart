@@ -17,11 +17,6 @@ class Schedule extends StatefulWidget {
 class _ScheduleState extends State<Schedule> {
   late List<Map<String, dynamic>> schedules = [];
   late List<Map<String, dynamic>> logs = [];
-  List<Map<String, dynamic>> displayType = [
-    {'bool': true, 'name': '予定'},
-    {'bool': false, 'name': '行動記録'},
-    {'bool': false, 'name': '予定\n＆\n行動記録'},
-  ];
 
   bool scheduleType = true;
   DateTime selectedDate = DateTime.now();
@@ -98,71 +93,24 @@ class _ScheduleState extends State<Schedule> {
 
   //TODO:スケジュールかやったことか両方を表示するのかを判定しそれを円かタイムテーブルで表示するのかを判定し、そのWidgetを生成する
 
-  Widget displayTypeButton() {
-    for (int i = 0; i < displayType.length; i++) {
-      if (displayType[i]['bool']) {
-        return SizedBox(
-          width: 100,
-          child: ElevatedButton(
-            onPressed: () {
-              displayType[i]['bool'] = false;
-              if (i == displayType.length - 1) {
-                displayType[0]['bool'] = true;
-              } else {
-                displayType[i + 1]['bool'] = true;
-              }
-              setState(() {
-                displayType;
-              });
-            },
-            child: Text(
-              displayType[i]['name'],
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
-      }
-    }
-    return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            displayType[1]['bool'] = true;
-          });
-        },
-        child: Text(displayType[0]['name']));
-  }
-
   //この関数でスケジュールの表示方法を円かタイムテーブルかに分ける
-  Widget switchScheduleType() {
+  Widget switchScheduleType(data) {
     if (scheduleType) {
       double height = 0;
       //このIF文で画面目一杯のタイムテーブルか高さが400のタイムテーブルにしている。
-      if (MediaQuery.of(context).size.height -
-              Scaffold.of(context).appBarMaxHeight! -
-              kBottomNavigationBarHeight <
-          400) {
+      double size = (Scaffold.of(context).appBarMaxHeight ?? 0) +
+          MediaQuery.of(context).size.height -
+          kBottomNavigationBarHeight;
+
+      if (size < 400) {
         height = 400;
       } else {
-        height = MediaQuery.of(context).size.height -
-            Scaffold.of(context).appBarMaxHeight! -
-            kBottomNavigationBarHeight;
+        height = size;
       }
-      if (displayType[0]['bool']) {
-        return TimetableSchedule().timetableSchedule(
-            width: MediaQuery.of(context).size.width,
-            height: height,
-            schedules: schedules);
-      } else if (displayType[1]['bool']) {
-        return TimetableSchedule().timetableSchedule(
-            width: MediaQuery.of(context).size.width,
-            height: height,
-            schedules: logs);
-      } else {
-        return TimetableSchedule().timetableSchedule(
-            width: MediaQuery.of(context).size.width,
-            height: height,
-            schedules: schedules);
-      }
+      return TimetableSchedule().timetableSchedule(
+          width: MediaQuery.of(context).size.width * 0.5,
+          height: height,
+          schedules: data);
     } else {
       double size;
       //横か縦のどちらが大きいかを判断し、小さい方に合わせて円の大きさを決める。
@@ -176,15 +124,8 @@ class _ScheduleState extends State<Schedule> {
             Scaffold.of(context).appBarMaxHeight! -
             kBottomNavigationBarHeight;
       }
-      if (displayType[0]['bool']) {
-        return CircleSchedule()
-            .circleSchedule(width: size, schedules: schedules);
-      } else if (displayType[1]['bool']) {
-        return CircleSchedule().circleSchedule(width: size, schedules: logs);
-      } else {
-        return CircleSchedule()
-            .circleSchedule(width: size, schedules: schedules);
-      }
+      return CircleSchedule()
+          .circleSchedule(width: size * 0.5, schedules: data);
     }
   }
 
@@ -216,7 +157,6 @@ class _ScheduleState extends State<Schedule> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                displayTypeButton(),
                 TextButton(
                   onPressed: () => _selectDate(context),
                   child: Text(
@@ -234,7 +174,22 @@ class _ScheduleState extends State<Schedule> {
                 ),
               ],
             ),
-            switchScheduleType(),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    Text('予定'),
+                    switchScheduleType(schedules),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text('行動記録'),
+                    switchScheduleType(logs),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ),
