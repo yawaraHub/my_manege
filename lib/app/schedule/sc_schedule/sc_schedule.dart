@@ -20,7 +20,7 @@ class _ScheduleState extends State<Schedule> {
   List<Map<String, dynamic>> displayType = [
     {'bool': true, 'name': '予定'},
     {'bool': false, 'name': '行動記録'},
-    {'bool': false, 'name': '予定\n＆\n行動記録'}
+    {'bool': false, 'name': '予定\n＆\n行動記録'},
   ];
 
   bool scheduleType = true;
@@ -59,7 +59,7 @@ class _ScheduleState extends State<Schedule> {
     List<
         Map<String,
             dynamic>> originalSchedules = await SchedulesDao().getOneDaySchedule(
-        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+        "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}");
     List<Map<String, dynamic>> originalAllSchedules =
         await SchedulesDao().queryAllRows();
     for (int i = 0; i < originalSchedules.length; i++) {
@@ -87,9 +87,12 @@ class _ScheduleState extends State<Schedule> {
       lastDate: DateTime(3000),
     );
     if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
+      selectedDate = picked;
+      schedules = [];
+      logs = [];
+      _getLogs();
+      _getSchedules();
+      setState(() {});
     }
   }
 
@@ -144,10 +147,22 @@ class _ScheduleState extends State<Schedule> {
             Scaffold.of(context).appBarMaxHeight! -
             kBottomNavigationBarHeight;
       }
-      return TimetableSchedule().timetableSchedule(
-          width: MediaQuery.of(context).size.width,
-          height: height,
-          schedules: schedules);
+      if (displayType[0]['bool']) {
+        return TimetableSchedule().timetableSchedule(
+            width: MediaQuery.of(context).size.width,
+            height: height,
+            schedules: schedules);
+      } else if (displayType[1]['bool']) {
+        return TimetableSchedule().timetableSchedule(
+            width: MediaQuery.of(context).size.width,
+            height: height,
+            schedules: logs);
+      } else {
+        return TimetableSchedule().timetableSchedule(
+            width: MediaQuery.of(context).size.width,
+            height: height,
+            schedules: schedules);
+      }
     } else {
       double size;
       //横か縦のどちらが大きいかを判断し、小さい方に合わせて円の大きさを決める。
@@ -161,7 +176,15 @@ class _ScheduleState extends State<Schedule> {
             Scaffold.of(context).appBarMaxHeight! -
             kBottomNavigationBarHeight;
       }
-      return CircleSchedule().circleSchedule(width: size, schedules: schedules);
+      if (displayType[0]['bool']) {
+        return CircleSchedule()
+            .circleSchedule(width: size, schedules: schedules);
+      } else if (displayType[1]['bool']) {
+        return CircleSchedule().circleSchedule(width: size, schedules: logs);
+      } else {
+        return CircleSchedule()
+            .circleSchedule(width: size, schedules: schedules);
+      }
     }
   }
 
@@ -197,11 +220,8 @@ class _ScheduleState extends State<Schedule> {
                 TextButton(
                   onPressed: () => _selectDate(context),
                   child: Text(
-                    "${selectedDate.toLocal()}".split(' ')[0],
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent),
+                    "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
+                    style: TextStyle(fontSize: 30, color: Colors.blueAccent),
                   ),
                 ),
                 Switch(

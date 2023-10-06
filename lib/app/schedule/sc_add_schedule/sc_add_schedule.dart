@@ -220,7 +220,7 @@ class _AddScheduleState extends State<AddSchedule> {
                     "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
                 'end_at':
                     "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
-                'description': description,
+                'review': description,
                 'category_id': widget.categoryId,
                 'created_at': DateTime.now().toString(),
                 'updated_at': DateTime.now().toString(),
