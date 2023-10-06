@@ -3,26 +3,25 @@ import 'package:my_manege/app/category/category_tree.dart';
 import 'package:my_manege/app/category/sc_add_category.dart';
 import 'package:my_manege/sqflite/tb_category.dart';
 
-class Category extends StatefulWidget {
-  const Category({Key? key}) : super(key: key);
+class SelectCategory extends StatefulWidget {
+  const SelectCategory({super.key});
 
   @override
-  State<Category> createState() => _CategoryState();
+  State<SelectCategory> createState() => _SelectCategoryState();
 }
 
-class _CategoryState extends State<Category> {
-  CategoriesDao categoriesDao = CategoriesDao();
+class _SelectCategoryState extends State<SelectCategory> {
   late List<Map<String, dynamic>> categories = [];
   late List<TreeNode> categoryTreeNodes = [];
-
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    getCategoriesAndTreeNode();
+    _getCategoriesAndTreeNode();
   }
 
-  getCategoriesAndTreeNode() async {
-    categories = await categoriesDao.getCategoryHierarchy();
+  _getCategoriesAndTreeNode() async {
+    categories = await CategoriesDao().getCategoryHierarchy();
     categoryTreeNodes = CreateTreeNode().createTree(categories);
 
     setState(() {});
@@ -30,8 +29,8 @@ class _CategoryState extends State<Category> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
+    return AlertDialog(
+      content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
@@ -56,14 +55,27 @@ class _CategoryState extends State<Category> {
               },
               child: Text('カテゴリーを追加'),
             ),
-            Column(
-              children: categoryTreeNodes.map((node) {
-                return TreeViewState(node: node);
-              }).toList(),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: categoryTreeNodes.map((node) {
+                    return TreeViewState(node: node);
+                  }).toList(),
+                ),
+              ),
             ),
           ],
         ),
       ),
+      actions: [
+        ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('閉じる'))
+      ],
     );
   }
 }

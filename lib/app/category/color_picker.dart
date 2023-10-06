@@ -67,7 +67,7 @@ class _ColorPickerState extends State<ColorPicker> {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Color(int.parse("0xff$colorCode")),
+            color: Color(int.parse("0xbb$colorCode")),
           ),
           child: Text(
             '色を選択',
@@ -92,12 +92,12 @@ class _ColorPickerState extends State<ColorPicker> {
                     children: [
                       for (int k = 1; k < 5; k++) ...{
                         colorSelectButton(
-                            r: (k + 1) * 51,
-                            g: (j * 12.75).toInt() * (k + 1),
+                            r: (k) * 51,
+                            g: (j * 12.75).toInt() * (k),
                             b: 0,
                             width: width)
                       },
-                      for (int k = 1; k < 5; k++) ...{
+                      for (int k = 1; k < 4; k++) ...{
                         colorSelectButton(
                             r: 255,
                             g: j * 51 + ((255 - j * 51) / 5 * k).toInt(),
@@ -121,7 +121,7 @@ class _ColorPickerState extends State<ColorPicker> {
                             b: 0,
                             width: width)
                       },
-                      for (int k = 1; k < 5; k++) ...{
+                      for (int k = 1; k < 4; k++) ...{
                         colorSelectButton(
                             r: 255 - j * 51 + ((j * 51) / 5 * k).toInt(),
                             g: 255,
@@ -145,7 +145,7 @@ class _ColorPickerState extends State<ColorPicker> {
                             b: (j * 12.75).toInt() * (k + 1),
                             width: width)
                       },
-                      for (int k = 1; k < 5; k++) ...{
+                      for (int k = 1; k < 4; k++) ...{
                         colorSelectButton(
                             r: k * 51,
                             g: 255,
@@ -169,7 +169,7 @@ class _ColorPickerState extends State<ColorPicker> {
                             b: (k + 1) * 51,
                             width: width)
                       },
-                      for (int k = 1; k < 5; k++) ...{
+                      for (int k = 1; k < 4; k++) ...{
                         colorSelectButton(
                             r: k * 51,
                             g: 255 - j * 51 + ((j * 51) / 5 * k).toInt(),
@@ -193,7 +193,7 @@ class _ColorPickerState extends State<ColorPicker> {
                             b: (k + 1) * 51,
                             width: width)
                       },
-                      for (int k = 1; k < 5; k++) ...{
+                      for (int k = 1; k < 4; k++) ...{
                         colorSelectButton(
                             r: j * 51 + ((255 - j * 51) / 5 * k).toInt(),
                             g: k * 51,
@@ -217,7 +217,7 @@ class _ColorPickerState extends State<ColorPicker> {
                             b: 51 * (k + 1) - (j * 12.75).toInt() * (k + 1),
                             width: width)
                       },
-                      for (int k = 1; k < 5; k++) ...{
+                      for (int k = 1; k < 4; k++) ...{
                         colorSelectButton(
                             r: 255,
                             g: k * 51,
@@ -249,7 +249,7 @@ class CircularColor extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(int.parse("0xff$thisColor")) // 円の色を設定
+      ..color = Color(int.parse("0xbb$thisColor")) // 円の色を設定
       ..style = PaintingStyle.fill; // 塗りつぶしスタイルを設定
 
     final center = Offset(size.width / 2, size.height / 2); // 円の中心座標を計算
@@ -275,7 +275,7 @@ class SelectedCircularColor extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(int.parse("0xff$thisColor")) // 円の色を設定
+      ..color = Color(int.parse("0xbb$thisColor")) // 円の色を設定
       ..style = PaintingStyle.fill; // 塗りつぶしスタイルを設定
 
     final center = Offset(size.width / 2, size.height / 2); // 円の中心座標を計算

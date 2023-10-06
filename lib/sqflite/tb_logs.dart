@@ -10,6 +10,7 @@ class LogsDao {
       await db.execute('''
       CREATE TABLE logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        day TEXT NOT NULL,
         start_at TEXT NOT NULL,
         end_at TEXT NOT NULL,
         review TEXT,
@@ -55,6 +56,6 @@ class LogsDao {
   Future<List<Map<String, dynamic>>> getSameDayData(String date) async {
     final db = await dbHelper.database;
     await _createTableIfNotExists(db);
-    return await db.rawQuery("SELECT * FROM logs WHERE start_at LIKE '$date%'");
+    return await db.rawQuery("SELECT * FROM logs WHERE day LIKE '$date%'");
   }
 }

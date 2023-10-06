@@ -80,8 +80,8 @@ class TimetablePainter extends CustomPainter {
 class RoundedRectPainter extends CustomPainter {
   final Map<String, dynamic> scheduleData;
   final String thisColor;
-  final double startTime;
-  final double endTime;
+  final String startTime;
+  final String endTime;
   final String categoryName;
 
   RoundedRectPainter({
@@ -101,12 +101,21 @@ class RoundedRectPainter extends CustomPainter {
 
     //1時間のたかさ
     final hourHeight = size.height / 28;
+    List<String> timeStartParts = startTime.split(":");
+    List<String> timeEndParts = endTime.split(":");
+    final int startHour = int.parse(timeStartParts[0]);
+    final int startMinute = int.parse(timeStartParts[1]);
+    final int startSecond = int.parse(timeStartParts[2]);
+    final int endHour = int.parse(timeEndParts[0]);
+    final int endMinute = int.parse(timeEndParts[1]);
+    final int endSecond = int.parse(timeEndParts[2]);
 
     // RRect（丸みを帯びた矩形）を作成
     final RRect roundedRect = RRect.fromRectAndRadius(
       Rect.fromPoints(
-        Offset(90, hourHeight * (startTime / 60 + 1 / 2)),
-        Offset(size.width - 30, hourHeight * (endTime / 60 + 1 / 2)),
+        Offset(90, hourHeight * (startHour + startMinute / 60 + 1 / 2)),
+        Offset(
+            size.width - 30, hourHeight * (endHour + endMinute / 60 + 1 / 2)),
       ),
       Radius.circular(cornerRadius),
     );
@@ -114,12 +123,11 @@ class RoundedRectPainter extends CustomPainter {
     // 丸い角を持つ四角を描画
     canvas.drawRRect(roundedRect, paint);
 
-    final int startHour = startTime ~/ 60;
-    final int startMinute = (startTime % 60).toInt();
-    final int endHour = endTime ~/ 60;
-    final int endMinute = (endTime % 60).toInt();
     // categoryNameを描画
-    if (hourHeight * (endTime - startTime) / 60 >= 40) {
+    if (hourHeight *
+            ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) /
+            60 >=
+        40) {
       final TextSpan span = TextSpan(
         text:
             '$categoryName\n${startHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')} ~ ${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}',
@@ -138,10 +146,13 @@ class RoundedRectPainter extends CustomPainter {
         canvas,
         Offset(
           (size.width + 60) / 2 - tp.width / 2, // 四角形の中央に配置
-          hourHeight * (startTime / 60 + 1 / 2), // テキストの位置を調整
+          hourHeight * (startHour + startMinute / 60 + 1 / 2), // テキストの位置を調整
         ),
       );
-    } else if (hourHeight * (endTime - startTime) / 60 >= 16) {
+    } else if (hourHeight *
+            ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) /
+            60 >=
+        16) {
       final TextSpan span = TextSpan(
         text: categoryName,
         style: TextStyle(
@@ -159,7 +170,7 @@ class RoundedRectPainter extends CustomPainter {
         canvas,
         Offset(
           (size.width + 60) / 2 - tp.width / 2, // 四角形の中央に配置
-          hourHeight * (startTime / 60 + 1 / 2), // テキストの位置を調整
+          hourHeight * (startHour + startMinute / 60 + 1 / 2), // テキストの位置を調整
         ),
       );
     }

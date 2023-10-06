@@ -17,11 +17,10 @@ class MyManageDBHelper {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, 'my_database.db');
 
-    return await openDatabase(
-      path,
-      version: 1, // データベースのバージョン
-      onCreate: _createDatabase, // データベースが作成されるときに呼び出されるメソッド
-    );
+    return await openDatabase(path,
+        version: 1, // データベースのバージョン
+        onCreate: _createDatabase, // データベースが作成されるときに呼び出されるメソッド
+        readOnly: false);
   }
 
   Future<void> _createDatabase(Database db, int version) async {
@@ -55,10 +54,11 @@ class MyManageDBHelper {
       CREATE TABLE categories (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT NOT NULL,
+        color TEXT NOT NULL,
         description TEXT DEFAULT "",
         is_show INTEGER DEFAULT 1,
         parent_id INTEGER,
-        order INTEGER NOT NULL,
+        category_order INTEGER NOT NULL,
         user_id INTEGER,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
@@ -69,6 +69,7 @@ class MyManageDBHelper {
     await db.execute('''
       CREATE TABLE schedules (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        day TEXT NOT NULL,
         start_at TEXT NOT NULL,
         end_at TEXT NOT NULL,
         description TEXT DEFAULT "",
@@ -82,6 +83,7 @@ class MyManageDBHelper {
     await db.execute('''
       CREATE TABLE logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        day TEXT NOT NULL,
         start_at TEXT NOT NULL,
         end_at TEXT NOT NULL,
         review TEXT DEFAULT "",
@@ -128,7 +130,7 @@ class MyManageDBHelper {
         end_at TEXT NOT NULL,
         description TEXT DEFAULT "",
         category_id INTEGER NOT NULL,
-        habit_id INTEGER NOT NULL,
+        regular_template_id INTEGER NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         deleted_at TEXT,
@@ -155,7 +157,7 @@ class MyManageDBHelper {
         end_at TEXT NOT NULL,
         description TEXT DEFAULT "",
         category_id INTEGER NOT NULL,
-        template_id INTEGER NOT NULL,
+        irregular_template_id INTEGER NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         deleted_at TEXT,

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 class CircleSchedule {
   Widget circleSchedule(
@@ -122,8 +123,8 @@ class WhiteCircle extends CustomPainter {
 class FunShape extends CustomPainter {
   final Map<String, dynamic> scheduleData;
   final String thisColor; // 色を受け取るためのプロパティ
-  final double startTime; // 開始角度を受け取るためのプロパティ
-  final double endTime; // 弧の角度を受け取るためのプロパティ
+  final String startTime; // 開始角度を受け取るためのプロパティ
+  final String endTime; // 弧の角度を受け取るためのプロパティ
   final String categoryName;
 
   FunShape(
@@ -143,8 +144,20 @@ class FunShape extends CustomPainter {
     final double centerY = size.height / 2;
     final double radius = size.width / 2;
 
-    final double startAngle = pi / 12 / 60 * startTime - pi / 2; // 開始角度
-    final double sweepAngle = pi / 12 / 60 * (endTime - startTime); // 弧の角度
+    List<String> timeStartParts = startTime.split(":");
+    List<String> timeEndParts = endTime.split(":");
+    final int startHour = int.parse(timeStartParts[0]);
+    final int startMinute = int.parse(timeStartParts[1]);
+    final int startSecond = int.parse(timeStartParts[2]);
+    final int endHour = int.parse(timeEndParts[0]);
+    final int endMinute = int.parse(timeEndParts[1]);
+    final int endSecond = int.parse(timeEndParts[2]);
+    final double startAngle =
+        pi / 12 / 60 * (startHour * 60 + startMinute) - pi / 2; // 開始角度
+    final double sweepAngle = pi /
+        12 /
+        60 *
+        ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)); // 弧の角度
 
     // 扇を描画
     canvas.drawArc(
@@ -154,11 +167,6 @@ class FunShape extends CustomPainter {
       true, // trueで扇を描画、falseで円環を描画
       paint,
     );
-    // テキストの描画
-    final int startHour = startTime ~/ 60;
-    final int startMinute = (startTime % 60).toInt();
-    final int endHour = endTime ~/ 60;
-    final int endMinute = (endTime % 60).toInt();
     if (sweepAngle >= pi / 6) {
       final TextPainter textPainter = TextPainter(
         text: TextSpan(

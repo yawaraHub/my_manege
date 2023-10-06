@@ -10,6 +10,7 @@ class SchedulesDao {
       await db.execute('''
       CREATE TABLE schedules (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        day TEXT NOT NULL
         start_at TEXT NOT NULL,
         end_at TEXT NOT NULL,
         description TEXT DEFAULT "",

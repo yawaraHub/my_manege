@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:my_manege/app/parts/schedule_sc/circle_schedule.dart';
 import 'package:my_manege/app/parts/schedule_sc/timetable_schedule.dart';
 import 'package:my_manege/app/schedule/goal_add_sc.dart';
+import 'package:my_manege/app/schedule/sc_add_schedule/sc_select_category.dart';
+import 'package:my_manege/sqflite/tb_logs.dart';
+import 'package:my_manege/sqflite/tb_schedules.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({super.key});
@@ -11,49 +14,89 @@ class Schedule extends StatefulWidget {
 }
 
 class _ScheduleState extends State<Schedule> {
-  List<Map<String, dynamic>> schedules = [
-    {
-      'thisColor': '006666',
-      'startTime': 60.0,
-      'endTime': 200.0,
-      'categoryName': 'Math'
-    },
-    {
-      'thisColor': '660066',
-      'startTime': 180.0,
-      'endTime': 400.0,
-      'categoryName': 'English'
-    },
-  ];
-  List<Map<String, dynamic>> logs = [
-    {
-      'thisColor': '002222',
-      'startTime': 500.0,
-      'endTime': 620.0,
-      'categoryName': 'Math'
-    },
-    {
-      'thisColor': '993399',
-      'startTime': 680.0,
-      'endTime': 740.0,
-      'categoryName': 'English'
-    },
-    {
-      'thisColor': '993399',
-      'startTime': 800.0,
-      'endTime': 900.0,
-      'categoryName': 'English'
-    },
-  ];
-
+  // List<Map<String, dynamic>> schedules = [
+  //   {
+  //     'thisColor': '006666',
+  //     'startTime': '08:40:00',
+  //     'endTime': '10:50:00',
+  //     'categoryName': 'Math'
+  //   },
+  //   {
+  //     'thisColor': '660066',
+  //     'startTime': '12:10:00',
+  //     'endTime': '13:11:00',
+  //     'categoryName': 'English'
+  //   },
+  // ];
+  // List<Map<String, dynamic>> logs = [
+  //   {
+  //     'thisColor': '006666',
+  //     'startTime': '08:40:00',
+  //     'endTime': '09:40:00',
+  //     'categoryName': 'Math'
+  //   },
+  //   {
+  //     'thisColor': '660066',
+  //     'startTime': '10:10:00',
+  //     'endTime': '11:11:00',
+  //     'categoryName': 'English'
+  //   },
+  // ];
+  List<Map<String, dynamic>> schedules = [];
+  List<Map<String, dynamic>> logs = [];
   List<Map<String, dynamic>> displayType = [
-    {'bool': true, 'name': 'Schedule'},
-    {'bool': false, 'name': 'done'},
-    {'bool': false, 'name': 'both'}
+    {'bool': true, 'name': '予定'},
+    {'bool': false, 'name': '行動記録'},
+    {'bool': false, 'name': '予定\n＆\n行動記録'}
   ];
 
   bool scheduleType = true;
   DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getLogs();
+    _getSchedules();
+  }
+
+  _getLogs() async {
+    List<Map<String, dynamic>> originalLogs = await LogsDao().getSameDayData(
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+
+    for (int i = 0; i < originalLogs.length; i++) {
+      logs[i]['id'] = originalLogs[i]['id'];
+      logs[i]['day'] = originalLogs[i]['day'];
+      logs[i]['start_at'] = originalLogs[i]['start_at'];
+      logs[i]['end_at'] = originalLogs[i]['end_at'];
+      logs[i]['review'] = originalLogs[i]['review'];
+      logs[i]['category_id'] = originalLogs[i]['category_id'];
+      logs[i]['created_at'] = originalLogs[i]['created_at'];
+      logs[i]['updated_at'] = originalLogs[i]['updated_at'];
+      logs[i]['deleted_at'] = originalLogs[i]['deleted_at'];
+    }
+    setState(() {});
+  }
+
+  _getSchedules() async {
+    List<
+        Map<String,
+            dynamic>> originalSchedules = await SchedulesDao().getOneDaySchedule(
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+    for (int i = 0; i < originalSchedules.length; i++) {
+      logs[i]['id'] = originalSchedules[i]['id'];
+      logs[i]['day'] = originalSchedules[i]['day'];
+      logs[i]['start_at'] = originalSchedules[i]['start_at'];
+      logs[i]['end_at'] = originalSchedules[i]['end_at'];
+      logs[i]['review'] = originalSchedules[i]['description'];
+      logs[i]['category_id'] = originalSchedules[i]['category_id'];
+      logs[i]['created_at'] = originalSchedules[i]['created_at'];
+      logs[i]['updated_at'] = originalSchedules[i]['updated_at'];
+      logs[i]['deleted_at'] = originalSchedules[i]['deleted_at'];
+    }
+    setState(() {});
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -88,7 +131,10 @@ class _ScheduleState extends State<Schedule> {
                 displayType;
               });
             },
-            child: Text(displayType[i]['name']),
+            child: Text(
+              displayType[i]['name'],
+              textAlign: TextAlign.center,
+            ),
           ),
         );
       }
@@ -190,6 +236,17 @@ class _ScheduleState extends State<Schedule> {
             switchScheduleType(),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SelectCategory();
+            },
+          );
+        },
       ),
     );
   }
