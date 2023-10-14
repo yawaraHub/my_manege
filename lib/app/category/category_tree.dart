@@ -65,8 +65,9 @@ class CreateTreeNode {
 
 class TreeViewState extends StatefulWidget {
   final TreeNode node;
+  final int homeIndex;
 
-  TreeViewState({required this.node});
+  TreeViewState({required this.node, required this.homeIndex});
 
   @override
   _TreeViewState createState() => _TreeViewState();
@@ -82,13 +83,23 @@ class _TreeViewState extends State<TreeViewState> {
       children: [
         InkWell(
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
                 return AddSchedule(
-                  categoryId: widget.node.id,
+                  homeIndex: widget.homeIndex,
+                  scheduleData: {
+                    'schedule': true,
+                    'data': {
+                      'category_id': widget.node.id,
+                      'date': DateTime.now(),
+                      'start_at': DateTime.now(),
+                      'end_at': DateTime.now().add(Duration(hours: 1)),
+                      'description': '',
+                    },
+                  },
                 );
-              },
+              }),
             );
           },
           child: ListTile(
@@ -195,7 +206,10 @@ class _TreeViewState extends State<TreeViewState> {
             padding: EdgeInsets.only(left: 20.0),
             child: Column(
               children: widget.node.children!
-                  .map((child) => TreeViewState(node: child))
+                  .map((child) => TreeViewState(
+                        node: child,
+                        homeIndex: widget.homeIndex,
+                      ))
                   .toList(),
             ),
           ),

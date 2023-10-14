@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:my_manege/app/category/category_tree.dart';
 import 'package:my_manege/app/category/sc_add_category.dart';
+import 'package:my_manege/main.dart';
 import 'package:my_manege/sqflite/tb_category.dart';
 
 class SelectCategory extends StatefulWidget {
-  const SelectCategory({super.key});
+  final int homeIndex;
+  const SelectCategory({super.key, required this.homeIndex});
 
   @override
   State<SelectCategory> createState() => _SelectCategoryState();
@@ -29,8 +31,8 @@ class _SelectCategoryState extends State<SelectCategory> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      content: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
@@ -61,21 +63,28 @@ class _SelectCategoryState extends State<SelectCategory> {
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: categoryTreeNodes.map((node) {
-                    return TreeViewState(node: node);
+                    return TreeViewState(
+                      node: node,
+                      homeIndex: widget.homeIndex,
+                    );
                   }).toList(),
                 ),
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return HomePage(selectedIndex: widget.homeIndex);
+                  }),
+                );
+              },
+              child: Text('閉じる'),
+            ),
           ],
         ),
       ),
-      actions: [
-        ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('閉じる'))
-      ],
     );
   }
 }

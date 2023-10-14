@@ -58,7 +58,10 @@ class _CategoryState extends State<Category> {
             ),
             Column(
               children: categoryTreeNodes.map((node) {
-                return TreeViewState(node: node);
+                return TreeViewState(
+                  node: node,
+                  homeIndex: 3,
+                );
               }).toList(),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_manege/app/schedule/sc_add_schedule/sc_select_category.dart';
 import 'package:my_manege/sqflite/tb_category.dart';
 import 'package:my_manege/sqflite/tb_logs.dart';
 import 'package:my_manege/sqflite/tb_schedules.dart';
@@ -6,8 +7,10 @@ import 'package:my_manege/sqflite/tb_schedules.dart';
 import '../../../main.dart';
 
 class AddSchedule extends StatefulWidget {
-  final int categoryId;
-  const AddSchedule({super.key, required this.categoryId});
+  final int homeIndex;
+  final Map<String, dynamic> scheduleData;
+  const AddSchedule(
+      {super.key, required this.homeIndex, required this.scheduleData});
   @override
   State<AddSchedule> createState() => _AddScheduleState();
 }
@@ -26,7 +29,8 @@ class _AddScheduleState extends State<AddSchedule> {
   }
 
   _getCategoryData() async {
-    categoryData = await CategoriesDao().categoryData(widget.categoryId);
+    categoryData = await CategoriesDao()
+        .categoryData(widget.scheduleData['data']['category_id']);
     setState(() {});
   }
 
@@ -108,8 +112,8 @@ class _AddScheduleState extends State<AddSchedule> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      content: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             TextButton(
@@ -122,7 +126,20 @@ class _AddScheduleState extends State<AddSchedule> {
                     color: Colors.blueAccent),
               ),
             ),
-            Text('${categoryData['name']}'),
+
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return SelectCategory(
+                      homeIndex: widget.homeIndex,
+                    );
+                  }),
+                );
+              },
+              child: Text('${categoryData['name']}'),
+            ),
             //select schedule or behavior
             ToggleButtons(
               children: [
@@ -185,57 +202,60 @@ class _AddScheduleState extends State<AddSchedule> {
                 description = value;
               },
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return HomePage(selectedIndex: widget.homeIndex);
+                  }),
+                );
+              },
+              child: Text('閉じる'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (isSelected[0]) {
+                  //Record schedule here
+                  SchedulesDao().insert({
+                    'day':
+                        "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
+                    'start_at':
+                        "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
+                    'end_at':
+                        "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
+                    'description': description,
+                    'category_id': widget.scheduleData['data']['category_id'],
+                    'created_at': DateTime.now().toString(),
+                    'updated_at': DateTime.now().toString(),
+                  });
+                } else {
+                  //Record behavior here
+                  LogsDao().insert({
+                    'day':
+                        "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
+                    'start_at':
+                        "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
+                    'end_at':
+                        "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
+                    'review': description,
+                    'category_id': widget.scheduleData['data']['category_id'],
+                    'created_at': DateTime.now().toString(),
+                    'updated_at': DateTime.now().toString(),
+                  });
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return HomePage(selectedIndex: 0);
+                  }),
+                );
+              },
+              child: Text('登録'),
+            ),
           ],
         ),
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('閉じる'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (isSelected[0]) {
-              //Record schedule here
-              SchedulesDao().insert({
-                'day':
-                    "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
-                'start_at':
-                    "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
-                'end_at':
-                    "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
-                'description': description,
-                'category_id': widget.categoryId,
-                'created_at': DateTime.now().toString(),
-                'updated_at': DateTime.now().toString(),
-              });
-            } else {
-              //Record behavior here
-              LogsDao().insert({
-                'day':
-                    "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}",
-                'start_at':
-                    "${selectedStartTime.hour.toString().padLeft(2, '0')}:${selectedStartTime.minute.toString().padLeft(2, '0')}",
-                'end_at':
-                    "${selectedEndTime.hour.toString().padLeft(2, '0')}:${selectedEndTime.minute.toString().padLeft(2, '0')}",
-                'review': description,
-                'category_id': widget.categoryId,
-                'created_at': DateTime.now().toString(),
-                'updated_at': DateTime.now().toString(),
-              });
-            }
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) {
-                return HomePage(selectedIndex: 0);
-              }),
-            );
-          },
-          child: Text('登録'),
-        ),
-      ],
     );
   }
 }
