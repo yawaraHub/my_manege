@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_manege/app/schedule/schedule_add_sc.dart';
 
 class HabitScheduleAdd extends StatefulWidget {
   const HabitScheduleAdd({Key? key}) : super(key: key);
@@ -57,13 +56,7 @@ class _HabitScheduleAddState extends State<HabitScheduleAdd> {
                         children: [
                           Text('${i + 1}日目'),
                           ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return ScheduleDidAdd();
-                                  });
-                            },
+                            onPressed: () {},
                             child: Text('予定'),
                           ),
                           //TODO:これが予定表。1時間20のheight

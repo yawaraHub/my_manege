@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_manege/app/schedule/goal_add_sc.dart';
 import 'package:my_manege/app/schedule/sc_add_schedule/sc_select_category.dart';
-import 'package:my_manege/app/schedule/sc_schedule/desplay_parts/scp_schedule_log.dart';
+import 'package:my_manege/app/schedule/sc_schedule/desplay_schedule_log_parts/scp_schedule_log.dart';
 import 'package:my_manege/sqflite/tb_category.dart';
 import 'package:my_manege/sqflite/tb_logs.dart';
 import 'package:my_manege/sqflite/tb_schedules.dart';
@@ -77,8 +76,8 @@ class _ScheduleState extends State<Schedule> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(1000),
-      lastDate: DateTime(3000),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2200),
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
@@ -105,14 +104,7 @@ class _ScheduleState extends State<Schedule> {
                   children: [],
                 ),
                 trailing: IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return GoalAdd();
-                      },
-                    );
-                  },
+                  onPressed: () {},
                   icon: Icon(Icons.add),
                 ),
               ),

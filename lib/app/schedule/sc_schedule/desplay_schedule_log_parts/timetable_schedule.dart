@@ -52,15 +52,7 @@ class _TimetableScheduleState extends State<TimetableSchedule> {
                             homeIndex: 0,
                             scheduleData: {
                               'schedule': true,
-                              'data': {
-                                'category_id': widget.schedules[i]
-                                    ['category_id'],
-                                'date': DateTime.now(),
-                                'start_at': DateTime.now(),
-                                'end_at':
-                                    DateTime.now().add(Duration(hours: 1)),
-                                'description': '',
-                              },
+                              'data': widget.schedules[i],
                             },
                           );
                         }),

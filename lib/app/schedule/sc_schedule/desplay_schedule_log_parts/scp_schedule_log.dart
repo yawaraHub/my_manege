@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_manege/app/schedule/sc_schedule/desplay_parts/circle_schedule.dart';
-import 'package:my_manege/app/schedule/sc_schedule/desplay_parts/timetable_schedule.dart';
+import 'package:my_manege/app/schedule/sc_schedule/desplay_schedule_log_parts/circle_schedule.dart';
+import 'package:my_manege/app/schedule/sc_schedule/desplay_schedule_log_parts/timetable_schedule.dart';
 
 class ScheduleAndLogParts extends StatefulWidget {
   final bool scheduleType;

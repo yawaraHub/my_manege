@@ -18,6 +18,7 @@ class AddSchedule extends StatefulWidget {
 class _AddScheduleState extends State<AddSchedule> {
   List<bool> isSelected = [true, false];
   Map<String, dynamic> categoryData = {};
+  DateTime selectedDate = DateTime.now();
   TimeOfDay selectedStartTime = TimeOfDay.now();
   TimeOfDay selectedEndTime = TimeOfDay.now();
   String description = "";
@@ -25,12 +26,26 @@ class _AddScheduleState extends State<AddSchedule> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getCategoryData();
+    _getData();
   }
 
-  _getCategoryData() async {
+  _getData() async {
     categoryData = await CategoriesDao()
         .categoryData(widget.scheduleData['data']['category_id']);
+    List day = widget.scheduleData['data']['day'].split('/');
+    selectedDate =
+        DateTime(int.parse(day[0]), int.parse(day[1]), int.parse(day[2]));
+    List<String> start = widget.scheduleData['data']['start_at'].split(":");
+    List<String> end = widget.scheduleData['data']['end_at'].split(":");
+    selectedStartTime =
+        TimeOfDay(hour: int.parse(start[0]), minute: int.parse(start[1]));
+    selectedEndTime =
+        TimeOfDay(hour: int.parse(end[0]), minute: int.parse(end[1]));
+    if (widget.scheduleData['schedule']) {
+      description = widget.scheduleData['data']['description'] ?? "";
+    } else {
+      description = widget.scheduleData['data']['review'] ?? "";
+    }
     setState(() {});
   }
 
@@ -93,8 +108,6 @@ class _AddScheduleState extends State<AddSchedule> {
       },
     );
   }
-
-  DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
